@@ -1,7 +1,13 @@
 # 법률–조례 연결 확인기 · 법률네트워크
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
+
 > 법률명·지자체·API키만 넣으면, **그 법률에 연결된 지자체 조례·규칙**을 찾아
 > 표와 네트워크 그래프로 보여 주는 파이썬 GUI 프로그램입니다.
+
+> 📖 **왜 이걸 만들었나 → [WHY.md](WHY.md)**
 
 「공무원을 위한 AI 활용」 **7-5장 ‘그래프DB로 법령 관계 분석하기’** 의
 - 6장 *법령 인용 네트워크 만들기*
@@ -168,5 +174,18 @@ pip install pyinstaller
 pyinstaller --onefile --windowed --name "법률조례_연결확인기" law_ordinance_network.py
 ```
 - `--onefile` 단일 exe · `--windowed` 콘솔창 숨김
-- 빌드 설정은 `법률조례_연결확인기.spec` 에 기록됩니다(이 파일로 재빌드도 가능).
-- 결과물은 `dist\` 폴더에 생성됩니다.
+- 폴더형 배포가 필요하면 `--onefile` 대신 **`--onedir`** 사용(첫 실행이 더 빠름)
+- 결과물은 `dist\`(단일파일) 또는 지정한 폴더에 생성됩니다.
+
+---
+
+## 📄 라이선스
+
+[MIT License](LICENSE) — 자유롭게 사용·수정·재배포할 수 있습니다.
+
+## ⚠️ 면책 · 인증키 안내
+
+- 조회 결과의 정확성은 원문([국가법령정보센터](https://www.law.go.kr))으로 최종 확인하세요.
+  법제처 본문검색 특성상 ‘관련(간접)’ 항목에는 노이즈가 섞일 수 있어, 본문 대조로 걸러내지만 100%는 아닙니다.
+- **인증키(OC)는 각자 [open.law.go.kr](https://open.law.go.kr)에서 발급받아 사용하세요.
+  이 저장소에는 어떤 인증키도 포함되어 있지 않습니다.**
