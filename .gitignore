@@ -24,11 +24,28 @@ _*.txt
 *.csv
 
 # ===== 인증 정보 (키 유출 방지) =====
+.env
+.env.*
+!.env.example
 *.key
 *.pem
 oc.txt
 apikey*.txt
 secret*
+
+# ===== 개인정보 · 업무 데이터 (절대 업로드 금지) =====
+data/
+uploads/
+upload/
+backup/
+backups/
+result/
+results/
+*.xlsx
+*.xls
+*.hwp
+*.hwpx
+*.pdf
 
 # ===== OS / 에디터 =====
 Thumbs.db

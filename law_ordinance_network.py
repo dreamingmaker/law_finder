@@ -26,7 +26,9 @@ CoVe(검증의 사슬) 원칙대로, 검색 결과를 그대로 믿지 않고
 """
 
 import csv
+import os
 import re
+import sys
 import threading
 import time
 import webbrowser
@@ -56,6 +58,42 @@ for _f in ("Malgun Gothic", "맑은 고딕", "NanumGothic", "AppleGothic", "Guli
     except Exception:
         continue
 rcParams["axes.unicode_minus"] = False
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# 환경변수 / .env 로딩 — API 인증키(OC)를 코드에 하드코딩하지 않기 위함
+#   실행 폴더(또는 exe·스크립트 폴더)에 .env 가 있으면 LAW_OC 등을 읽어 온다.
+# ──────────────────────────────────────────────────────────────────────────
+def _load_dotenv():
+    bases = []
+    try:
+        bases.append(os.getcwd())
+        bases.append(os.path.dirname(
+            sys.executable if getattr(sys, "frozen", False) else os.path.abspath(__file__)))
+    except Exception:
+        pass
+    seen = set()
+    for base in bases:
+        path = os.path.join(base, ".env")
+        if path in seen:
+            continue
+        seen.add(path)
+        try:
+            with open(path, encoding="utf-8") as f:
+                for line in f:
+                    s = line.strip()
+                    if not s or s.startswith("#") or "=" not in s:
+                        continue
+                    k, v = s.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+        except FileNotFoundError:
+            continue
+        except Exception:
+            continue
+
+
+_load_dotenv()
+DEFAULT_OC = os.environ.get("LAW_OC", "")   # .env 또는 시스템 환경변수에서 (없으면 빈 값)
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -408,7 +446,7 @@ class App(tk.Tk):
 
         # row 1 — API 인증키 / 추가 검색어(옛 이름·약칭)
         ttk.Label(top, text="API 인증키(OC)").grid(row=1, column=0, padx=(10, 4), pady=4, sticky="e")
-        self.var_oc = tk.StringVar()
+        self.var_oc = tk.StringVar(value=DEFAULT_OC)
         ttk.Entry(top, textvariable=self.var_oc, width=24, show="•").grid(row=1, column=1, pady=4, sticky="w")
         ttk.Label(top, text="추가 검색어").grid(row=1, column=3, padx=(18, 4), pady=4, sticky="e")
         self.var_extra = tk.StringVar()
