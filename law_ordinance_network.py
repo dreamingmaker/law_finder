@@ -427,7 +427,7 @@ class App(tk.Tk):
 
         # row 0 — 법률명(+법령 확인) / 지자체(광역·시군구 콤보)
         ttk.Label(top, text="법률명").grid(row=0, column=0, padx=(10, 4), pady=(10, 4), sticky="e")
-        self.var_law = tk.StringVar(value="주차장법")
+        self.var_law = tk.StringVar(value="")   # 기본값 비움(예시값으로 인한 오조회 방지)
         self.ent_law = ttk.Entry(top, textvariable=self.var_law, width=24)
         self.ent_law.grid(row=0, column=1, pady=(10, 4), sticky="w")
         self.var_law.trace_add("write", lambda *a: self.var_lawinfo.set(""))  # 법률명 바뀌면 확인표시 초기화
