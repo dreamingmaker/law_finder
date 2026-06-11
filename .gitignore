@@ -1,0 +1,38 @@
+# ===== 빌드 산출물 (용량 큼 · 재생성 가능) =====
+dist/
+dist_onedir/
+build/
+build_onedir/
+*.exe
+*.spec
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# ===== 로그 · 임시 · 개발용 =====
+_build_*.log
+# 시연용 스크립트(절대경로·데모키 포함) — 배포 제외
+_demo_run.py
+# 진단/테스트 임시 파일 (_enc.txt, _codes.txt 등)
+_*.txt
+# 조회 결과 내보내기(개인 데이터)
+*.csv
+
+# ===== 인증 정보 (키 유출 방지) =====
+*.key
+*.pem
+oc.txt
+apikey*.txt
+secret*
+
+# ===== OS / 에디터 =====
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

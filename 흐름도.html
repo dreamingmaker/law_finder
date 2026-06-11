@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>법률–조례 연결 확인기 · 동작 흐름도</title>
+<style>
+  :root{
+    --law:#c62828; --ground:#2e7d32; --cite:#ef6c00; --weak:#8e24aa; --none:#9e9e9e;
+    --input:#1565c0; --process:#00838f; --search:#ef6c00; --verify:#c62828; --output:#6a1b9a;
+    --ink:#1f2733; --sub:#5b6573; --line:#d7dde6; --bg:#eef1f6; --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:34px 18px 56px;
+    font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    color:var(--ink); background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  code{font-family:"Consolas","D2Coding",monospace; font-size:.9em;
+       background:#eef2f7; color:#0b3d63; padding:1px 6px; border-radius:5px;}
+  .wrap{max-width:1080px; margin:0 auto;}
+
+  /* 헤더 */
+  header{text-align:center; margin-bottom:26px;}
+  header .kicker{display:inline-block; font-size:13px; letter-spacing:.12em; font-weight:700;
+    color:#fff; background:linear-gradient(90deg,#c62828,#6a1b9a); padding:6px 16px; border-radius:999px;}
+  header h1{margin:14px 0 6px; font-size:34px; letter-spacing:-.5px;}
+  header .sub{margin:0; color:var(--sub); font-size:15px;}
+  header .src{margin:10px 0 0; font-size:13px; color:#8a94a3;}
+
+  /* 한 줄 가치 */
+  .tagline{
+    background:var(--card); border:1px solid var(--line); border-left:6px solid var(--law);
+    border-radius:14px; padding:16px 22px; margin:0 auto 30px; max-width:920px;
+    font-size:17px; line-height:1.6; text-align:center; box-shadow:0 6px 18px rgba(20,30,50,.05);
+  }
+  .tagline b{color:var(--law);}
+
+  /* 흐름 */
+  .flow{display:flex; flex-direction:column; align-items:stretch; gap:0;}
+  .arrow{align-self:center; color:#aeb7c4; font-size:24px; line-height:1; margin:9px 0;}
+
+  .stage{
+    position:relative; display:flex; gap:20px; align-items:flex-start;
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:22px 24px; box-shadow:0 8px 22px rgba(20,30,50,.06);
+    border-top:5px solid var(--c,#bbb);
+  }
+  .stage .num{
+    flex:0 0 auto; width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:21px; font-weight:800; color:#fff; background:var(--c,#888);
+    box-shadow:0 4px 10px rgba(0,0,0,.12);
+  }
+  .stage .body{flex:1 1 auto; min-width:0;}
+  .stage h2{margin:2px 0 12px; font-size:21px; letter-spacing:-.3px;}
+  .stage ul{margin:8px 0 0; padding-left:20px; line-height:1.72; font-size:15px;}
+  .stage li b{color:var(--ink);}
+
+  .stage-input{--c:var(--input);}
+  .stage-process{--c:var(--process);}
+  .stage-search{--c:var(--search);}
+  .stage-verify{--c:var(--verify);}
+  .stage-output{--c:var(--output);}
+
+  /* 핵심 배지 */
+  .keytag{display:inline-block; font-size:12px; font-weight:800; letter-spacing:.04em;
+    color:#fff; background:var(--process); padding:3px 11px; border-radius:999px; margin-bottom:8px;}
+  .keytag.red{background:var(--verify);}
+  .key{box-shadow:0 10px 26px rgba(198,40,40,.10);}
+
+  /* 입력 칩 */
+  .chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{background:#eaf2fb; border:1px solid #cfe0f5; color:#114c86;
+    padding:9px 14px; border-radius:11px; font-size:15px; font-weight:700;}
+  .chip em{font-style:normal; font-weight:500; color:#5b6573;}
+  .chip.opt{background:#f4f5f7; border-color:#e1e5ea; color:#5b6573;}
+
+  /* 확장 설명 */
+  .expand{margin-top:14px; background:#e7f6f7; border:1px dashed #7fc6cd;
+    border-radius:12px; padding:13px 16px; font-size:15px;}
+  .expand b{color:#00626c;}
+  .expand .old{color:var(--law);}
+  .expand .ex{margin-top:7px; font-size:14px; color:#37606a;}
+  .expand .plus,.expand .old{font-weight:800;}
+  .hl{background:#fff3bf; padding:1px 7px; border-radius:5px; font-size:13px; font-weight:700; color:#7a5b00;}
+
+  /* 연결강도 칩 */
+  .grades{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .g{flex:1 1 0; min-width:120px; text-align:center; color:#fff; border-radius:11px; padding:11px 8px; font-weight:800; font-size:16px;}
+  .g small{display:block; font-weight:600; font-size:12px; opacity:.92; margin-top:3px;}
+  .g.ground{background:var(--ground);}
+  .g.cite{background:var(--cite);}
+  .g.weak{background:var(--weak);}
+  .g.none{background:var(--none);}
+
+  /* 출력 */
+  .outs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .out{background:#f6f1fb; border:1px solid #e4d4f3; border-radius:12px; padding:14px; text-align:center;}
+  .out .ic{font-size:24px;}
+  .out b{display:block; margin:6px 0 2px; font-size:16px; color:#4a1a6e;}
+  .out span{font-size:13px; color:#6c5a7e;}
+
+  /* 범례 / 푸터 */
+  footer{margin-top:34px; display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between; align-items:flex-start;}
+  .legend{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px; flex:1 1 360px;}
+  .legend h3{margin:0 0 10px; font-size:15px; color:var(--sub);}
+  .legend .row{display:flex; align-items:center; gap:10px; font-size:14px; margin:7px 0;}
+  .dot{width:13px; height:13px; border-radius:50%; flex:0 0 auto;}
+  .legend .desc{color:var(--sub);}
+  .stack{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px; flex:1 1 300px; font-size:13.5px; color:var(--sub); line-height:1.7;}
+  .stack b{color:var(--ink);}
+
+  @media (max-width:720px){
+    .outs{grid-template-columns:repeat(2,1fr);}
+    header h1{font-size:27px;}
+  }
+  @media print{
+    body{background:#fff; padding:0;}
+    .stage,.tagline,.legend,.stack{box-shadow:none;}
+    .arrow{margin:5px 0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="kicker">법률네트워크 · 동작 흐름도</span>
+    <h1>법률–조례 연결 확인기</h1>
+    <p class="sub">법률명 · 지자체 · API키만 넣으면 — 그 법률에 연결된 조례를 자동으로 찾아 표·네트워크로 보여 줍니다</p>
+    <p class="src">「공무원을 위한 AI 활용」 7-5장 ‘나를 인용하는 법 찾기’ · 법제처 국가법령정보 OPEN API 기반</p>
+  </header>
+
+  <div class="tagline">
+    “우리 지자체의 어떤 조례가 <b>이 법률</b>에 걸려 있나?” —
+    입법예고 영향 검토와 자치법규 정비를 <b>한 번의 조회</b>로.
+  </div>
+
+  <section class="flow">
+
+    <!-- 1 입력 -->
+    <div class="stage stage-input">
+      <div class="num">1</div>
+      <div class="body">
+        <h2>입력</h2>
+        <div class="chips">
+          <span class="chip">법률명 <em>+ 🔎 법령 확인</em></span>
+          <span class="chip">지자체 <em>광역 ▸ 시·군·구</em></span>
+          <span class="chip">API 인증키(OC)</span>
+          <span class="chip opt">추가 검색어 <em>(옵션)</em></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 2 법령 확인 & 확장 -->
+    <div class="stage stage-process key">
+      <div class="num">2</div>
+      <div class="body">
+        <span class="keytag">★ 핵심 ①</span>
+        <h2>법령 확인 &amp; 옛 이름 자동 확장</h2>
+        <ul>
+          <li><code>search_law</code> — 입력한 법률의 <b>정식 명칭</b> 확정 (오타·약칭 방지)</li>
+          <li><code>get_law_meta</code> — 「이전법령명」을 자동 수집 <span class="hl">제명변경 대응</span></li>
+        </ul>
+        <div class="expand">
+          검색어 묶음 = <b>현행명</b> ＋ <b class="old">옛 이름</b> ＋ 약칭 ＋ 추가어
+          <div class="ex">예) <b>지능정보화 기본법</b> <span class="plus">＋</span> <span class="old">국가정보화 기본법</span>
+            → 옛 이름만 인용하는 조례까지 빠짐없이 검색</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 3 검색 -->
+    <div class="stage stage-search">
+      <div class="num">3</div>
+      <div class="body">
+        <h2>자치법규 본문검색</h2>
+        <ul>
+          <li>법제처 OPEN API <code>target=ordin · search=2</code> (본문 인용 검색)</li>
+          <li>검색어마다 검색 → <b>일련번호(MST)로 합집합</b> (중복 제거)</li>
+          <li>지자체(<code>org</code>) · 종류(조례/규칙) 필터</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 4 검증 -->
+    <div class="stage stage-verify key">
+      <div class="num">4</div>
+      <div class="body">
+        <span class="keytag red">★ 핵심 ②</span>
+        <h2>본문 원문 검증 <small style="font-weight:600;font-size:14px;color:#8a3b3b">(CoVe · 검증의 사슬)</small></h2>
+        <ul>
+          <li>검색 결과를 그대로 믿지 않고 <b>조례 본문 원문을 다시 조회</b></li>
+          <li><b>제1조·본문에 법령명이 실제로 있는지</b> 대조 → 검색 노이즈 제거</li>
+          <li>어떤 이름(현행 / <span style="color:var(--law);font-weight:700">⚠ 옛 이름</span>)을 인용했는지까지 판정</li>
+        </ul>
+        <div class="grades">
+          <span class="g ground">근거<small>제1조 위임</small></span>
+          <span class="g cite">인용<small>본문 인용</small></span>
+          <span class="g weak">관련<small>간접·노이즈</small></span>
+          <span class="g none">미검증<small>본문 미확인</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 5 출력 -->
+    <div class="stage stage-output">
+      <div class="num">5</div>
+      <div class="body">
+        <h2>결과 출력</h2>
+        <div class="outs">
+          <div class="out"><div class="ic">📋</div><b>표</b><span>연결강도순 · 인용명칭</span></div>
+          <div class="out"><div class="ic">🕸️</div><b>네트워크 그래프</b><span>법률 ◀── 조례</span></div>
+          <div class="out"><div class="ic">⚠️</div><b>정비 대상</b><span>옛 명칭 인용 N건</span></div>
+          <div class="out"><div class="ic">💾</div><b>CSV 저장</b><span>· 원문 바로가기</span></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <div class="legend">
+      <h3>연결강도 — 위쪽일수록 확실한 연결</h3>
+      <div class="row"><span class="dot" style="background:var(--ground)"></span><b>근거(제1조 위임)</b><span class="desc">— 그 법의 위임으로 제정된 조례</span></div>
+      <div class="row"><span class="dot" style="background:var(--cite)"></span><b>인용(본문)</b><span class="desc">— 본문 조문에서 그 법을 인용</span></div>
+      <div class="row"><span class="dot" style="background:var(--weak)"></span><b>관련(간접)</b><span class="desc">— 본문에 법령명이 없음(검색 노이즈)</span></div>
+      <div class="row"><span class="dot" style="background:var(--none)"></span><b>미검증</b><span class="desc">— 본문을 확인하지 않음</span></div>
+    </div>
+    <div class="stack">
+      <b>기술 구성</b><br>
+      · 화면: Python <b>tkinter</b><br>
+      · 시각화: <b>matplotlib + networkx</b><br>
+      · 데이터: 법제처 국가법령정보 <b>OPEN API</b> (XML)<br>
+      · 검증 원칙: <b>CoVe</b> (원문 재확인으로 환각·노이즈 제거)
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

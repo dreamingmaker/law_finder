@@ -1,0 +1,5 @@
+# 법률-조례 연결 확인기 의존 패키지
+# (tkinter는 파이썬 표준 라이브러리라 여기에 없음)
+requests>=2.25
+matplotlib>=3.5
+networkx>=2.6
