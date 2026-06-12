@@ -112,6 +112,23 @@
   .stack{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px; flex:1 1 300px; font-size:13.5px; color:var(--sub); line-height:1.7;}
   .stack b{color:var(--ink);}
 
+  /* 문제정의 / 기대효과 */
+  .problem, .impact{
+    border-radius:16px; padding:20px 26px; max-width:980px; margin:0 auto 22px;
+    text-align:center; box-shadow:0 8px 22px rgba(20,30,50,.07);
+  }
+  .problem{background:#fdecea; border:2px solid #e57373; border-left:8px solid var(--law);}
+  .impact{background:#e8f5e9; border:2px solid #66bb6a; border-left:8px solid var(--ground); margin:28px auto 6px;}
+  .problem .label, .impact .label{
+    display:inline-block; font-size:14px; font-weight:800; letter-spacing:.06em;
+    color:#fff; padding:5px 16px; border-radius:999px; margin-bottom:12px;
+  }
+  .problem .label{background:var(--law);}
+  .impact .label{background:var(--ground);}
+  .problem .big, .impact .big{font-size:23px; font-weight:800; line-height:1.45;}
+  .problem .big{color:#b71c1c;}
+  .impact .big{color:#1b5e20;}
+
   @media (max-width:720px){
     .outs{grid-template-columns:repeat(2,1fr);}
     header h1{font-size:27px;}
@@ -132,6 +149,11 @@
     <p class="sub">법률명 · 지자체 · API키만 넣으면 — 그 법률에 연결된 조례를 자동으로 찾아 표·네트워크로 보여 줍니다</p>
     <p class="src">「공무원을 위한 AI 활용」 7-5장 ‘나를 인용하는 법 찾기’ · 법제처 국가법령정보 OPEN API 기반</p>
   </header>
+
+  <div class="problem">
+    <span class="label">❗ 문제정의</span>
+    <div class="big">법이 바뀌었을 때, 어느 조례가 영향을 받는지 알 수 없다!</div>
+  </div>
 
   <div class="tagline">
     “우리 지자체의 어떤 조례가 <b>이 법률</b>에 걸려 있나?” —
@@ -228,6 +250,11 @@
     </div>
 
   </section>
+
+  <div class="impact">
+    <span class="label">🎯 기대효과</span>
+    <div class="big">모든 조례들 전부 눌러보는 일은 그만!</div>
+  </div>
 
   <footer>
     <div class="legend">
